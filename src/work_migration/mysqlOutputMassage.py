@@ -2,6 +2,41 @@
 Created on Jun 19, 2015
 
 @author: paepcke
+
+Prepare a state migration export from MySQL for display
+as chord chart by Circos software.
+
+Takes a file of the form 
+   FromState\tToState\tNumMigrations,
+with lines such as:
+
+    AK    IL    3
+
+Outputs to stdout a matrix of the form:
+
+    State,    <state1>,<state2>,<state3>,...
+    <state1>     10,     30,....
+    <state2>
+    <state3>
+    
+Mandatory argument is the input file. Optional argument
+is the minimum number of migrations between states that
+are considered. Too low a number makes the chart too 
+crowded. Default is 3;     
+
+Ones the output of this script is in <state/stateMatrix>.csv,
+Circos charts are produced on the command line as follows:
+
+    * cd <circosRoot>/tools/tableviewer
+    * Get table into circos-digestible shape:
+        cat <state/stateMatrix>.csv  | bin/parse-table -field_delim ,  -no-field_delim_collapse | bin/make-conf -dir data
+
+    * Create the image:
+        ../../bin/circos -conf etc/circos.conf
+  
+    * View the image using Eye of Gnome:
+      eog img/tableview.png 
+
 '''
 from collections import OrderedDict
 import sys
@@ -12,7 +47,8 @@ class MySQLOutputMassager(object):
     classdocs
     '''
 
-    STATES = "AL\tAK\tAZ\tAR\tCA\tCO\tCT\tDE\tFL\tGA\tHI\tID\tIL\tIN\tIA\tKS\tKY\tLA\tME\tMD\tMA\tMI\tMN\tMS\tMO\tMT\tNE\tNV\tNH\tNJ\tNM\tNY\tNC\tND\tOH\tOK\tOR\tPA\tRI\tSC\tSD\tTN\tTX\tUT\tVT\tVA\tWA\tWV\tWI"
+    MINIMUM_MIGRATION = 3
+    STATES = "AL,AK,AZ,AR,CA,CO,CT,DE,FL,GA,HI,ID,IL,IN,IA,KS,KY,LA,ME,MD,MA,MI,MN,MS,MO,MT,NE,NV,NH,NJ,NM,NY,NC,ND,OH,OK,OR,PA,RI,SC,SD,TN,TX,UT,VT,VA,WA,WV,WI"
     
     def __init__(self, w1W2NumMovesTsvFile):
         '''
@@ -20,21 +56,25 @@ class MySQLOutputMassager(object):
         '''
         
         # Make an array of alphabetized states:
-        self.statesArr = MySQLOutputMassager.STATES.split('\t') 
+        self.statesArr = sorted(MySQLOutputMassager.STATES.split(',')) 
         
         self.w1Dict = OrderedDict()
         for oneState in self.statesArr:
+            # Throw out unknown state abbreviations:
+            if oneState not in MySQLOutputMassager.STATES:
+                continue
+            
             # For each state, create a key in
-            # statesArr that is the state, and
+            # statesArr of the state's name, and
             # init its value to an empty dict, which
-            # will hold the w2 destination state:
+            # will hold the w2 destination state dict:
             w2Dict = OrderedDict()
             
             # Init the w2 dict with 0s (people who
-            # did their 2nd job in each of the 
-            # states:
+            # did their next job in each of the 
+            # states):
             for w2State in self.statesArr:
-                w2Dict[w2State] = 0
+                w2Dict[w2State] = '0'
                 
             self.w1Dict[oneState] = w2Dict 
              
@@ -55,10 +95,10 @@ class MySQLOutputMassager(object):
 		
 		Print to stdout:
 		
-		     AB     AK     AL ... NY  ... PR  ... VI
-		AB   0      0      0      10      0        0
-		AK   0      0      0       0     20       30
-        AL   0      0     40       0      0        0		
+		Data AB     AK     AL ... NY  ... PR  ... VI
+		AB   -,-,-,10,-,-
+		AK   -,-,-,-,20,30
+        AL   -,-,40,-,-,-		
         
         :param w1w2NumMovesTsvFile:
         :type w1w2NumMovesTsvFile:
@@ -70,6 +110,17 @@ class MySQLOutputMassager(object):
                 w1State  = rowArr[0].strip('"')
                 w2State  = rowArr[1].strip('"')
                 numMoves = rowArr[2].strip()
+                
+                # Make sure data is clean:
+                if w1State not in MySQLOutputMassager.STATES or \
+                    w2State not in MySQLOutputMassager.STATES:
+                    continue
+                try:
+                    numMoves = int(numMoves)
+                except TypeError:
+                    # Skip this input row
+                    continue
+
                 try:
                     w2Dict = self.w1Dict[w1State]
                 except KeyError:
@@ -80,24 +131,53 @@ class MySQLOutputMassager(object):
                     
                     
         #print(self.w1Dict)
-        # Create the matrix and write to stdout:
-        sys.stdout.write('States\t' + MySQLOutputMassager.STATES)
+        # Create the matrix and write to stdout.
         
-        for nextAlphaState in self.statesArr:
+        # Remove row/column pairs in which no entry is
+        # > 0:
+        relevantStates = self.thinOutMatrix()
+        if len(relevantStates) == 0:
+            sys.stdout.write('No migration larger than the minimum of %s' % MySQLOutputMassager.MINIMUM_MIGRATION)
+            sys.exit()
+        
+         
+        sys.stdout.write('States,' + ','.join(relevantStates))
+        
+        for nextRelevantState in relevantStates:
             sys.stdout.write('\n')
             # Fill one row in the 50x50 matrix:
-            sys.stdout.write(nextAlphaState + '\t')
-            nextAlphaStateW2DestDict = self.w1Dict[nextAlphaState]
-            for destStateKey in nextAlphaStateW2DestDict.keys():
-                sys.stdout.write(str(nextAlphaStateW2DestDict[destStateKey]) + '\t')
+            sys.stdout.write(nextRelevantState + ',')
+            nextRelevantStateW2DestDict = self.w1Dict[nextRelevantState]
+            lastDestState = relevantStates[-1]
+            for destStateKey in relevantStates:
+                if destStateKey == lastDestState:
+                    sys.stdout.write(str(nextRelevantStateW2DestDict[destStateKey]))
+                else:
+                    sys.stdout.write(str(nextRelevantStateW2DestDict[destStateKey]) + ',')
+        sys.stdout.write('\n')
             
+    def thinOutMatrix(self):
+        
+        relevantStates = []
+        for fromState in self.statesArr:
+            destStatesDict = self.w1Dict[fromState]
+            for (toState, toMigration) in destStatesDict.items():
+                if int(toMigration) > MySQLOutputMassager.MINIMUM_MIGRATION:
+                    if toState not in relevantStates:
+                        relevantStates.append(toState)
+                    break
+        return relevantStates
+                
             
                 
 if __name__ == '__main__':
     
-    if len(sys.argv) != 2:
-        print('Usage: mysqlOutputMassage <w1w2CountTsv>')
+    if len(sys.argv) < 2:
+        print('Usage: mysqlOutputMassage <w1w2CountTsv> [minMigration]')
         sys.exit()
+    inputTable = sys.argv[1]
+    if len(sys.argv) > 2:
+        MySQLOutputMassager.MINIMUM_MIGRATION = sys.argv[2]
         
-    MySQLOutputMassager(sys.argv[1])
+    MySQLOutputMassager(inputTable)
                     

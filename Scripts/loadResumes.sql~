@@ -1,0 +1,283 @@
+CREATE TABLE Resumes (
+     resId INT UNIQUE NOT NULL AUTO_INCREMENT,
+     ID INT,
+     SourceURL varchar(255),
+     ContactName varchar(100),
+     CoverLetterObjective TEXT,
+     City varchar(100),
+     State varchar(2),
+     CoverLetterParagraphs TEXT,
+     VisaStatus MEDIUMTEXT,
+     W1Title varchar(255),
+     W1Organization varchar(255),
+     W1City varchar(100),
+     W1State varchar(100),
+     W1Duration_To varchar(100),
+     W1Duration_From varchar(100),
+     W1Description TEXT,
+     W2Title varchar(255),
+     W2Organization varchar(255),
+     W2City varchar(100),
+     W2State varchar(100),
+     W2Duration_To varchar(100),
+     W2Duration_From varchar(100),
+     W2Description TEXT,
+     W3Title varchar(255),
+     W3Organization varchar(255),
+     W3City varchar(100),
+     W3State varchar(100),
+     W3Duration_To varchar(100),
+     W3Duration_From varchar(100),
+     W3Description TEXT,
+     W4Title varchar(255),
+     W4Organization varchar(255),
+     W4City varchar(100),
+     W4State varchar(100),
+     W4Duration_To varchar(100),
+     W4Duration_From varchar(100),
+     W4Description TEXT,
+     W5Title varchar(255),
+     W5Organization varchar(255),
+     W5City varchar(100),
+     W5State varchar(100),
+     W5Duration_To varchar(100),
+     W5Duration_From varchar(100),
+     W5Description TEXT,
+     W6Title varchar(255),
+     W6Organization varchar(255),
+     W6City varchar(100),
+     W6State varchar(100),
+     W6Duration_To varchar(100),
+     W6Duration_From varchar(100),
+     W6Description TEXT,
+     W7Title varchar(255),
+     W7Organization varchar(255),
+     W7City varchar(100),
+     W7State varchar(100),
+     W7Duration_To varchar(100),
+     W7Duration_From varchar(100),
+     W7Description TEXT,
+     W8Title varchar(255),
+     W8Organization varchar(255),
+     W8City varchar(100),
+     W8State varchar(100),
+     W8Duration_To varchar(100),
+     W8Duration_From varchar(100),
+     W8Description TEXT,
+     W9Title varchar(255),
+     W9Organization varchar(255),
+     W9City varchar(100),
+     W9State varchar(100),
+     W9Duration_To varchar(100),
+     W9Duration_From varchar(100),
+     W9Description TEXT,
+     W10Title varchar(255),
+     W10Organization varchar(255),
+     W10City varchar(100),
+     W10State varchar(100),
+     W10Duration_To varchar(100),
+     W10Duration_From varchar(100),
+     W10Description TEXT,
+     W11Title varchar(255),
+     W11Organization varchar(255),
+     W11City varchar(100),
+     W11State varchar(100),
+     W11Duration_To varchar(100),
+     W11Duration_From varchar(100),
+     W11Description TEXT,
+     W12Title varchar(255),
+     W12Organization varchar(255),
+     W12City varchar(100),
+     W12State varchar(100),
+     W12Duration_To varchar(100),
+     W12Duration_From varchar(100),
+     W12Description TEXT,
+     W13Title varchar(255),
+     W13Organization varchar(255),
+     W13City varchar(100),
+     W13State varchar(100),
+     W13Duration_To varchar(100),
+     W13Duration_From varchar(100),
+     W13Description TEXT,
+     W14Title varchar(255),
+     W14Organization varchar(255),
+     W14City varchar(100),
+     W14State varchar(100),
+     W14Duration_To varchar(100),
+     W14Duration_From varchar(100),
+     W14Description TEXT,
+     W15Title varchar(255),
+     W15Organization varchar(255),
+     W15City varchar(100),
+     W15State varchar(100),
+     W15Duration_To varchar(100),
+     W15Duration_From varchar(100),
+     W15Description TEXT,
+     E1Course TEXT,
+     E1School_University varchar(255),
+     E1City varchar(100),
+     E1State varchar(100),
+     E1Duration_To varchar(100),
+     E1Duration_From varchar(100),
+     E2Course TEXT,
+     E2School_University varchar(255),
+     E2City varchar(100),
+     E2State varchar(100),
+     E2Duration_To varchar(100),
+     E2Duration_From varchar(100),
+     E3Course TEXT,
+     E3School_University varchar(255),
+     E3City varchar(100),
+     E3State varchar(100),
+     E3Duration_To varchar(100),
+     E3Duration_From varchar(100),
+     E4Course TEXT,
+     E4School_University varchar(255),
+     E4City varchar(100),
+     E4State varchar(100),
+     E4Duration_To varchar(100),
+     E4Duration_From varchar(100),
+     E5Course TEXT,
+     E5School_University varchar(255),
+     E5City varchar(100),
+     E5State varchar(100),
+     E5Duration_To varchar(100),
+     E5Duration_From varchar(100),
+     E6Course TEXT,
+     E6School_University varchar(255),
+     E6City varchar(100),
+     E6State varchar(100),
+     E6Duration_To varchar(100),
+     E6Duration_From varchar(100),
+     E7Course TEXT,
+     E7School_University varchar(255),
+     E7City varchar(100),
+     E7State varchar(100),
+     E7Duration_To varchar(100),
+     E7Duration_From varchar(100),
+     E8Course TEXT,
+     E8School_University varchar(255),
+     E8City varchar(100),
+     E8State varchar(100),
+     E8Duration_To varchar(100),
+     E8Duration_From varchar(100),
+     Skill MEDIUMTEXT,
+     A1Title varchar(255),
+     A1Year varchar(50),
+     A1Description TEXT,
+     A2Title varchar(255),
+     A2Year varchar(50),
+     A2Description TEXT,
+     A3Title varchar(255),
+     A3Year varchar(50),
+     A3Description TEXT,
+     A4Title varchar(255),
+     A4Year varchar(50),
+     A4Description TEXT,
+     A5Title varchar(255),
+     A5Year varchar(50),
+     A5Description TEXT,
+     Link1 varchar(255),
+     Link2 varchar(255),
+     Link3 varchar(255),
+     Link4 varchar(255),
+     Link5 varchar(255),
+     Link6 varchar(255),
+     Link7 varchar(255),
+     Link8 varchar(255),
+     AdditionalInformation TEXT
+);
+
+
+LOAD DATA LOCAL INFILE '/home/paepcke/tmp/courseInfo.csv'
+INTO TABLE Edx.CourseInfo
+FIELDS TERMINATED BY ','
+OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(course_display_name,course_catalog_name,academic_year,quarter,num_quarters,is_internal,enrollment_start,start_date,end_date); 
+
+
+
+CREATE INDEX cityIndx ON Resumes (city);
+CREATE INDEX stateIndx ON Resumes (state);
+
+CREATE INDEX w1TitleIndx ON Resumes (W1Title);
+CREATE INDEX w2TitleIndx ON Resumes (W2Title);
+CREATE INDEX w3TitleIndx ON Resumes (W3Title);
+CREATE INDEX w4TitleIndx ON Resumes (W4Title);
+CREATE INDEX w5TitleIndx ON Resumes (W5Title);
+CREATE INDEX w6TitleIndx ON Resumes (W6Title);
+CREATE INDEX w7TitleIndx ON Resumes (W7Title);
+CREATE INDEX w8TitleIndx ON Resumes (W8Title);
+CREATE INDEX w9TitleIndx ON Resumes (W9Title);
+CREATE INDEX w10TitleIndx ON Resumes (W10Title);
+CREATE INDEX w11TitleIndx ON Resumes (W11Title);
+CREATE INDEX w12TitleIndx ON Resumes (W12Title);
+CREATE INDEX w13TitleIndx ON Resumes (W13Title);
+CREATE INDEX w14TitleIndx ON Resumes (W14Title);
+CREATE INDEX w15TitleIndx ON Resumes (W15Title);
+
+CREATE INDEX w1CityIndx ON Resumes (W1City);
+CREATE INDEX w2CityIndx ON Resumes (W2City);
+CREATE INDEX w3CityIndx ON Resumes (W3City);
+CREATE INDEX w4CityIndx ON Resumes (W4City);
+CREATE INDEX w5CityIndx ON Resumes (W5City);
+CREATE INDEX w6CityIndx ON Resumes (W6City);
+CREATE INDEX w7CityIndx ON Resumes (W7City);
+CREATE INDEX w8CityIndx ON Resumes (W8City);
+CREATE INDEX w9CityIndx ON Resumes (W9City);
+CREATE INDEX w10CityIndx ON Resumes (W10City);
+CREATE INDEX w11CityIndx ON Resumes (W11City);
+CREATE INDEX w12CityIndx ON Resumes (W12City);
+CREATE INDEX w13CityIndx ON Resumes (W13City);
+CREATE INDEX w14CityIndx ON Resumes (W14City);
+CREATE INDEX w15CityIndx ON Resumes (W15City);
+
+CREATE INDEX w1OrganizationIndx ON Resumes (W1Organization);
+CREATE INDEX w2OrganizationIndx ON Resumes (W2Organization);
+CREATE INDEX w3OrganizationIndx ON Resumes (W3Organization);
+CREATE INDEX w4OrganizationIndx ON Resumes (W4Organization);
+CREATE INDEX w5OrganizationIndx ON Resumes (W5Organization);
+CREATE INDEX w6OrganizationIndx ON Resumes (W6Organization);
+CREATE INDEX w7OrganizationIndx ON Resumes (W7Organization);
+CREATE INDEX w8OrganizationIndx ON Resumes (W8Organization);
+CREATE INDEX w9OrganizationIndx ON Resumes (W9Organization);
+CREATE INDEX w10OrganizationIndx ON Resumes (W10Organization);
+CREATE INDEX w11OrganizationIndx ON Resumes (W11Organization);
+CREATE INDEX w12OrganizationIndx ON Resumes (W12Organization);
+CREATE INDEX w13OrganizationIndx ON Resumes (W13Organization);
+CREATE INDEX w14OrganizationIndx ON Resumes (W14Organization);
+CREATE INDEX w15OrganizationIndx ON Resumes (W15Organization);
+
+CREATE INDEX e1UniversityIndx ON Resumes (E1School_University);
+CREATE INDEX e2UniversityIndx ON Resumes (E2School_University);
+CREATE INDEX e3UniversityIndx ON Resumes (E3School_University);
+CREATE INDEX e4UniversityIndx ON Resumes (E4School_University);
+CREATE INDEX e5UniversityIndx ON Resumes (E5School_University);
+CREATE INDEX e6UniversityIndx ON Resumes (E6School_University);
+CREATE INDEX e7UniversityIndx ON Resumes (E7School_University);
+CREATE INDEX e8UniversityIndx ON Resumes (E8School_University);
+
+CREATE INDEX e1CityIndx ON Resumes (E1City);
+CREATE INDEX e2CityIndx ON Resumes (E2City);
+CREATE INDEX e3CityIndx ON Resumes (E3City);
+CREATE INDEX e4CityIndx ON Resumes (E4City);
+CREATE INDEX e5CityIndx ON Resumes (E5City);
+CREATE INDEX e6CityIndx ON Resumes (E6City);
+CREATE INDEX e7CityIndx ON Resumes (E7City);
+CREATE INDEX e8CityIndx ON Resumes (E8City);
+
+CREATE INDEX e1StateIndx ON Resumes (E1State);
+CREATE INDEX e2StateIndx ON Resumes (E2State);
+CREATE INDEX e3StateIndx ON Resumes (E3State);
+CREATE INDEX e4StateIndx ON Resumes (E4State);
+CREATE INDEX e5StateIndx ON Resumes (E5State);
+CREATE INDEX e6StateIndx ON Resumes (E6State);
+CREATE INDEX e7StateIndx ON Resumes (E7State);
+CREATE INDEX e8StateIndx ON Resumes (E8State);
+
+CREATE INDEX coverLettrIndx ON Resumes (CoverLetterObjective);
+CREATE INDEX coverLetterParsIndx ON Resumes (CoverLetterParagraphs);
+
+
